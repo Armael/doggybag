@@ -1,0 +1,28 @@
+(executable
+ (name doggybag_apprun)
+ (modules doggybag_apprun)
+ (libraries libelf libhack)
+ (flags -ccopt -static -cc musl-gcc))
+
+(executable
+ (name embed)
+ (modules embed)
+ (libraries bos))
+
+(rule
+ (targets doggybag_apprun_embed.ml)
+ (deps doggybag_apprun.exe embed.exe)
+ (action
+  (progn (run strip doggybag_apprun.exe -o doggybag_apprun_stripped)
+         (run ./embed.exe doggybag_apprun_stripped doggybag_apprun_embed.ml))))
+
+(rule
+ (targets doggybag_icon_embed.ml)
+ (deps ../data/dummy_icon.png embed.exe)
+ (action (run ./embed.exe ../data/dummy_icon.png doggybag_icon_embed.ml)))
+
+(executable
+ (name doggybag)
+ (modules doggybag doggybag_apprun_embed doggybag_icon_embed)
+ (libraries bos))
+

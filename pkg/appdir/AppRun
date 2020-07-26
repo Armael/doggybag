@@ -1,0 +1,2 @@
+#!/bin/sh
+PATH=$APPDIR/usr/bin:$PATH $APPDIR/usr/bin/doggybag $@
